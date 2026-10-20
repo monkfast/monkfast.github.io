@@ -3,18 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Monk Fast</title>
+  <title>Monk Fast — a simple fasting timer</title>
+  <meta name="description" content="A simple fasting timer for iPhone. No ads, no account, free.">
+  <link rel="icon" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta property="og:title" content="Monk Fast">
+  <meta property="og:description" content="A simple fasting timer for iPhone. No ads, no account, free.">
+  <meta property="og:image" content="https://monkfast.github.io/screenshots/1-track.png">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .hero { text-align: center; padding: 72px 16px 40px; }
+    .hero img { width: 104px; height: 104px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
+    .hero h1 { font-size: 44px; letter-spacing: -1px; margin: 24px 0 8px; }
+    .hero p { font-size: 20px; margin: 0; }
+    .soon { display: inline-block; margin-top: 28px; padding: 12px 22px; border-radius: 999px;
+            background: var(--text); color: var(--bg); font-weight: 600; font-size: 16px; }
+    .shots { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
+             padding: 8px max(16px, calc(50vw - 560px)) 32px; -webkit-overflow-scrolling: touch; }
+    .shots img { flex: none; width: 260px; border-radius: 28px; scroll-snap-align: center;
+                 border: 1px solid var(--border); background: var(--surface); }
+    .points { max-width: 680px; margin: 24px auto 0; padding: 0 16px; display: grid; gap: 12px; }
+    .points div { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px; }
+    .points strong { display: block; margin-bottom: 2px; }
+    .points span { color: var(--muted); }
+    footer.site { text-align: center; padding: 48px 16px 64px; font-size: 14px; color: var(--muted); }
+    footer.site a { margin: 0 8px; }
+  </style>
 </head>
 <body>
-<main>
-  <header><img src="icon.png" alt=""><a href="./">Monk Fast</a></header>
-  <h1>A calm fasting timer.</h1>
-  <p>One dial, the stages of your fast, and nothing you don't need. No account, no ads, and your data stays on your iPhone.</p>
-  <div class="card">
-    <p><a href="support.html">Support</a> · <a href="privacy.html">Privacy Policy</a></p>
+  <section class="hero">
+    <img src="icon.png" alt="Monk Fast icon">
+    <h1>Monk Fast</h1>
+    <p>A simple fasting timer for iPhone.<br>No ads, no account, free.</p>
+    <span class="soon">Coming soon to the App Store</span>
+  </section>
+
+  <div class="shots">
+    <img src="screenshots/1-track.png" alt="The timer during a fast">
+    <img src="screenshots/2-focus.png" alt="Monk mode: just the timer">
+    <img src="screenshots/3-clean.png" alt="Start screen">
+    <img src="screenshots/4-settings.png" alt="Settings">
+    <img src="screenshots/5-history.png" alt="Fasting history">
   </div>
-  <footer>© 2026 Monk Fast</footer>
-</main>
+
+  <div class="points">
+    <div><strong>One tap to start</strong><span>Plans from 13:11 to 36 hours, or your own. Fix the start time anytime.</span></div>
+    <div><strong>Monk mode</strong><span>Hide everything except the timer.</span></div>
+    <div><strong>On your Lock Screen</strong><span>Live Activity, widgets, Control Center and Siri.</span></div>
+    <div><strong>Private</strong><span>Your fasts stay on your iPhone. Nothing is collected.</span></div>
+  </div>
+
+  <footer class="site">
+    <a href="support.html">Support</a> · <a href="privacy.html">Privacy</a>
+    <p>Not medical advice. Talk to a doctor before fasting.</p>
+  </footer>
 </body>
 </html>
