@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
   <title>Monk Fast — a simple fasting timer</title>
   <meta name="description" content="A simple fasting timer for iPhone. No ads, no account, free.">
   <link rel="icon" href="icon.png">
@@ -12,17 +13,36 @@
   <meta property="og:image" content="https://monkfast.github.io/screenshots/1-track.png">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* Always light, like the screenshots: same white, same soft emerald glow. */
+    :root { color-scheme: light; --bg: #FFFFFF; --surface: #FFFFFF; --text: #1A1A1A;
+            --muted: rgba(0,0,0,.6); --border: rgba(0,0,0,.08); --brand: #059669; }
+    body { background: radial-gradient(1200px 700px at 50% 0%, rgba(16,185,129,.10), transparent 70%),
+                       radial-gradient(1200px 800px at 50% 100%, rgba(16,185,129,.08), transparent 70%), #FFFFFF; }
     .hero { text-align: center; padding: 72px 16px 40px; }
     .hero img { width: 104px; height: 104px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,.12); }
     .hero h1 { font-size: 44px; letter-spacing: -1px; margin: 24px 0 8px; }
     .hero p { font-size: 20px; margin: 0; }
     .soon { display: inline-block; margin-top: 28px; padding: 12px 22px; border-radius: 999px;
-            background: var(--text); color: var(--bg); font-weight: 600; font-size: 16px; }
-    .shots { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
-             padding: 8px max(16px, calc(50vw - 560px)) 32px; -webkit-overflow-scrolling: touch; }
-    .shots img { flex: none; width: 260px; border-radius: 28px; scroll-snap-align: center;
-                 border: 1px solid var(--border); background: var(--surface); }
-    .points { max-width: 680px; margin: 24px auto 0; padding: 0 16px; display: grid; gap: 12px; }
+            background: var(--brand); color: #FFFFFF; font-weight: 600; font-size: 16px; }
+    .carousel { position: relative; max-width: 1100px; margin: 0 auto; }
+    .shots { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+             padding: 12px calc(50% - 150px) 20px; -webkit-overflow-scrolling: touch; }
+    .shots::-webkit-scrollbar { display: none; }
+    .shots img { flex: none; width: 300px; border-radius: 34px; scroll-snap-align: center;
+                 border: 1px solid var(--border); background: var(--surface);
+                 transform: scale(.82); opacity: .45; transition: transform .35s ease, opacity .35s ease; }
+    .shots img.active { transform: scale(1); opacity: 1; box-shadow: 0 24px 60px rgba(4,120,87,.16), 0 4px 16px rgba(0,0,0,.06); }
+    .nav { position: absolute; top: 50%; transform: translateY(-60%); width: 44px; height: 44px; border-radius: 50%;
+           border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 22px;
+           cursor: pointer; display: grid; place-items: center; box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+    .nav.prev { left: calc(50% - 240px); } .nav.next { right: calc(50% - 240px); }
+    .nav:disabled { opacity: 0; pointer-events: none; }
+    .dots { display: flex; justify-content: center; gap: 8px; }
+    .dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 4px; background: var(--border);
+                   cursor: pointer; transition: width .25s ease, background .25s ease; }
+    .dots button.active { width: 22px; background: var(--brand); }
+    @media (max-width: 560px) { .nav { display: none; } .shots img { width: 250px; } .shots { padding-inline: calc(50% - 125px); } }
+    .points { max-width: 680px; margin: 48px auto 0; padding: 0 16px; display: grid; gap: 12px; }
     .points div { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px 20px; }
     .points strong { display: block; margin-bottom: 2px; }
     .points span { color: var(--muted); }
@@ -38,13 +58,18 @@
     <span class="soon">Coming soon to the App Store</span>
   </section>
 
-  <div class="shots">
-    <img src="screenshots/1-track.png" alt="The timer during a fast">
-    <img src="screenshots/2-focus.png" alt="Monk mode: just the timer">
-    <img src="screenshots/3-clean.png" alt="Start screen">
-    <img src="screenshots/4-settings.png" alt="Settings">
-    <img src="screenshots/5-history.png" alt="Fasting history">
+  <div class="carousel">
+    <button class="nav prev" aria-label="Previous screenshot">‹</button>
+    <div class="shots">
+      <img src="screenshots/1-track.png" alt="The timer during a fast">
+      <img src="screenshots/2-focus.png" alt="Monk mode: just the timer">
+      <img src="screenshots/3-clean.png" alt="Start screen">
+      <img src="screenshots/4-settings.png" alt="Settings">
+      <img src="screenshots/5-history.png" alt="Fasting history">
+    </div>
+    <button class="nav next" aria-label="Next screenshot">›</button>
   </div>
+  <div class="dots"></div>
 
   <div class="points">
     <div><strong>One tap to start</strong><span>Plans from 13:11 to 36 hours, or your own. Fix the start time anytime.</span></div>
@@ -57,5 +82,42 @@
     <a href="support.html">Support</a> · <a href="privacy.html">Privacy</a>
     <p>Not medical advice. Talk to a doctor before fasting.</p>
   </footer>
+  <script>
+    // Swipe, arrows or dots: whichever screenshot is centred is "active".
+    const track = document.querySelector(".shots");
+    const slides = [...track.querySelectorAll("img")];
+    const dots = document.querySelector(".dots");
+    const prev = document.querySelector(".nav.prev"), next = document.querySelector(".nav.next");
+    slides.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.setAttribute("aria-label", `Screenshot ${i + 1}`);
+      b.onclick = () => go(i);
+      dots.appendChild(b);
+    });
+    let current = 0;
+    function go(i) {
+      i = Math.max(0, Math.min(slides.length - 1, i));
+      const s = slides[i];
+      track.scrollTo({ left: s.offsetLeft - (track.clientWidth - s.clientWidth) / 2, behavior: "smooth" });
+    }
+    function update() {
+      const mid = track.scrollLeft + track.clientWidth / 2;
+      current = slides.reduce((best, s, i) =>
+        Math.abs(s.offsetLeft + s.clientWidth / 2 - mid) < Math.abs(slides[best].offsetLeft + slides[best].clientWidth / 2 - mid) ? i : best, 0);
+      slides.forEach((s, i) => s.classList.toggle("active", i === current));
+      [...dots.children].forEach((d, i) => d.classList.toggle("active", i === current));
+      prev.disabled = current === 0; next.disabled = current === slides.length - 1;
+    }
+    prev.onclick = () => go(current - 1);
+    next.onclick = () => go(current + 1);
+    slides.forEach((s, i) => s.onclick = () => go(i));
+    track.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+    window.addEventListener("resize", update);
+    window.addEventListener("load", update);
+    slides.forEach(s => s.complete ? null : s.addEventListener("load", update));
+    slides[0].classList.add("active");
+    document.addEventListener("keydown", e => { if (e.key === "ArrowLeft") go(current - 1); if (e.key === "ArrowRight") go(current + 1); });
+    update();
+  </script>
 </body>
 </html>
