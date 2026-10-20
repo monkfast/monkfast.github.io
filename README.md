@@ -2,7 +2,7 @@
 
 <h1 align="center">Monk Fast</h1>
 
-<p align="center">A simple fasting timer for iPhone.<br>No ads, no account, and the basics are free.</p>
+<p align="center">A simple fasting timer for iPhone.<br>No ads, no account, free.</p>
 
 <p align="center">
   <img src="screenshots/1-track.png" width="19%" alt="Timer">
